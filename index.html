@@ -43,7 +43,7 @@
     .petal-layer {
       position: fixed; inset: 0;
       pointer-events: none;
-      z-index: 0;
+      z-index: 10;
       overflow: hidden;
     }
     .petal {
@@ -816,6 +816,63 @@
   </p>
 </footer>
 
+<!-- ★ 라이트박스 활성화: 아래 주석 해제
+
+<style>
+#lightbox {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(30,20,14,.88);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+#lightbox.open { display: flex; }
+#lightbox img {
+  max-width: 92vw;
+  max-height: 88vh;
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.5);
+  object-fit: contain;
+  animation: lbIn .25s cubic-bezier(.34,1.4,.64,1);
+}
+#lightbox .lb-close {
+  position: fixed;
+  top: 20px; right: 24px;
+  font-size: 32px;
+  color: rgba(255,255,255,.8);
+  cursor: pointer;
+  line-height: 1;
+  transition: transform .2s;
+}
+#lightbox .lb-close:hover { transform: scale(1.2); }
+#lightbox .lb-prev,
+#lightbox .lb-next {
+  position: fixed;
+  top: 50%; transform: translateY(-50%);
+  font-size: 36px;
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  padding: 12px;
+  user-select: none;
+  transition: color .2s;
+}
+#lightbox .lb-prev { left: 12px; }
+#lightbox .lb-next { right: 12px; }
+#lightbox .lb-prev:hover,
+#lightbox .lb-next:hover { color: #fff; }
+@keyframes lbIn { from{opacity:0;transform:scale(.88)} to{opacity:1;transform:scale(1)} }
+.g-item { cursor: zoom-in; }
+</style>
+<div id="lightbox">
+  <span class="lb-close" id="lbClose">✕</span>
+  <span class="lb-prev" id="lbPrev">‹</span>
+  <img id="lbImg" src="" alt="" />
+  <span class="lb-next" id="lbNext">›</span>
+</div>
+-->
+
 <script>
 /* ── Petal generator ── */
 (function(){
@@ -850,6 +907,48 @@
   },{threshold:.12});
   document.querySelectorAll('.reveal, .tl-row').forEach(el=>io.observe(el));
 })();
+
+/* ★ 라이트박스 활성화: 아래
+/* ── Lightbox ── */
+/*
+(function(){
+  const lb     = document.getElementById('lightbox');
+  const lbImg  = document.getElementById('lbImg');
+  const lbClose= document.getElementById('lbClose');
+  const lbPrev = document.getElementById('lbPrev');
+  const lbNext = document.getElementById('lbNext');
+  let images = [], current = 0;
+
+  function open(idx){
+    current = idx;
+    lbImg.src = images[current];
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function prev(){ open((current - 1 + images.length) % images.length); }
+  function next(){ open((current + 1) % images.length); }
+
+  document.querySelectorAll('.g-item img').forEach((img, i) => {
+    images.push(img.src);
+    img.parentElement.addEventListener('click', () => open(i));
+  });
+
+  lbClose.addEventListener('click', close);
+  lbPrev.addEventListener('click', prev);
+  lbNext.addEventListener('click', next);
+  lb.addEventListener('click', e => { if(e.target === lb) close(); });
+  document.addEventListener('keydown', e => {
+    if(!lb.classList.contains('open')) return;
+    if(e.key === 'Escape') close();
+    if(e.key === 'ArrowLeft') prev();
+    if(e.key === 'ArrowRight') next();
+  });
+})();
+*/
 </script>
 </body>
 </html>

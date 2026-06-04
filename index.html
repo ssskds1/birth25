@@ -3,867 +3,843 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎉 우리 아기 돌잔치</title>
+  <title>김채윤 돌잔치</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <style>
-    /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --gold:   #f5c842;
-      --rose:   #f7a8c4;
-      --peach:  #fde6d8;
-      --cream:  #fffaf4;
-      --deep:   #4a2c6e;
-      --text:   #3d2b1f;
-      --white:  #ffffff;
+      --cream:   #faf7f2;
+      --ivory:   #f5f0e8;
+      --blush:   #f2c4b0;
+      --rose:    #e8a090;
+      --sage:    #a8bfaa;
+      --mint:    #c8ddd0;
+      --warm:    #8b6f5e;
+      --deep:    #4a3728;
+      --text:    #5c4a3a;
+      --light:   #9e8878;
+      --line:    #e8ddd4;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      font-family: 'Noto Sans KR', sans-serif;
       background: var(--cream);
       color: var(--text);
       overflow-x: hidden;
     }
 
-    /* ── Particle Canvas ── */
-    #particles {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+    /* ── Floating petals ── */
+    .petal-layer {
+      position: fixed; inset: 0;
       pointer-events: none;
       z-index: 0;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      top: -40px;
+      font-size: 14px;
+      opacity: 0;
+      animation: petalFall linear infinite;
+    }
+    @keyframes petalFall {
+      0%   { opacity: 0; transform: translateY(0) rotate(0deg) translateX(0); }
+      10%  { opacity: .55; }
+      90%  { opacity: .3; }
+      100% { opacity: 0; transform: translateY(105vh) rotate(360deg) translateX(40px); }
     }
 
-    /* ── Section Base ── */
-    section {
-      position: relative;
-      z-index: 1;
-      width: 100%;
+    /* ── Section base ── */
+    section { position: relative; z-index: 1; }
+
+    /* ── Scroll reveal ── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .8s ease, transform .8s ease;
     }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-slow { transition-duration: 1.1s; }
+    .reveal-delay1 { transition-delay: .15s; }
+    .reveal-delay2 { transition-delay: .3s; }
+    .reveal-delay3 { transition-delay: .45s; }
 
     /* ════════════════════════════════
-       SECTION 1 · HERO
+       HERO
     ════════════════════════════════ */
     #hero {
       min-height: 100vh;
+      background: linear-gradient(175deg, #fdf6ee 0%, #f7ede2 50%, #eee4d8 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(160deg, #fce4ec 0%, #e8d5f5 40%, #d4eaf7 100%);
       text-align: center;
-      padding: 60px 20px;
+      padding: 80px 24px 60px;
+      position: relative;
       overflow: hidden;
     }
 
-    #hero .ribbon {
-      font-size: 13px;
-      letter-spacing: 6px;
-      text-transform: uppercase;
-      color: var(--deep);
-      opacity: 0;
-      animation: fadeDown .8s .2s forwards;
-    }
-
-    #hero .baby-name {
-      font-size: clamp(52px, 10vw, 96px);
-      font-weight: 900;
-      background: linear-gradient(135deg, #c084fc, #f472b6, #fb923c);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1.1;
-      margin: 16px 0 8px;
-      opacity: 0;
-      animation: scaleIn .9s .5s cubic-bezier(.34,1.56,.64,1) forwards;
-    }
-
-    #hero .dol-text {
-      font-size: clamp(20px, 4vw, 32px);
-      color: var(--deep);
-      font-weight: 700;
-      letter-spacing: 4px;
-      opacity: 0;
-      animation: fadeUp .8s .9s forwards;
-    }
-
-    /* Hero image frame */
-    #hero .hero-img-wrap {
-      margin: 36px auto;
-      width: clamp(220px, 55vw, 380px);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #f9a8d4, #c084fc, #60a5fa);
-      padding: 6px;
-      box-shadow: 0 0 60px rgba(192,132,252,.4), 0 0 120px rgba(249,168,212,.3);
-      animation: floatY 4s ease-in-out infinite, fadeIn 1s 1.1s both;
-      position: relative;
-    }
-    #hero .hero-img-wrap::before {
+    #hero::before {
       content: '';
       position: absolute;
-      inset: -12px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(242,196,176,.3) 0%, transparent 70%);
+      top: -100px; right: -100px;
       border-radius: 50%;
-      background: conic-gradient(#f9a8d4, #c084fc, #60a5fa, #f9a8d4);
-      z-index: -1;
-      animation: spin 6s linear infinite;
-      opacity: .6;
     }
-    #hero .hero-img-wrap img,
-    #hero .hero-img-wrap .img-placeholder {
-      width: 100%;
-      height: 100%;
+    #hero::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(168,191,170,.2) 0%, transparent 70%);
+      bottom: -80px; left: -80px;
       border-radius: 50%;
-      object-fit: cover;
-      display: block;
-    }
-    #hero .hero-img-wrap .img-placeholder {
-      background: linear-gradient(135deg, #fde8f0, #e9d8fb);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 80px;
     }
 
-    #hero .date-badge {
+    .hero-eyebrow {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 12px;
+      letter-spacing: 5px;
+      color: var(--rose);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp .8s .3s forwards;
+    }
+
+    .hero-photo-wrap {
+      position: relative;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: scaleIn 1s .5s cubic-bezier(.34,1.4,.64,1) forwards;
+    }
+    .hero-photo-ring {
+      width: clamp(200px, 48vw, 320px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f2c4b0 0%, #c8ddd0 50%, #f5e6dc 100%);
+      padding: 5px;
+      box-shadow: 0 20px 60px rgba(139,111,94,.15), 0 4px 20px rgba(139,111,94,.1);
+    }
+    .hero-photo-inner {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fdf0e8, #eaf5ef);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 72px;
+      overflow: hidden;
+    }
+    .hero-photo-inner img {
+      width: 100%; height: 100%;
+      object-fit: cover; border-radius: 50%;
+    }
+    /* small deco circles */
+    .hero-photo-wrap .deco {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--blush);
+      opacity: .4;
+    }
+    .deco-a { width: 14px; height: 14px; top: 10px; right: -4px; animation: floatDot 3s ease-in-out infinite; }
+    .deco-b { width: 9px;  height: 9px;  bottom: 20px; left: -8px; background: var(--sage); animation: floatDot 3.5s 1s ease-in-out infinite; }
+    .deco-c { width: 6px;  height: 6px;  top: 50%; right: -16px; background: var(--mint); animation: floatDot 4s .5s ease-in-out infinite; }
+    @keyframes floatDot { 0%,100%{transform:translateY(0)}  50%{transform:translateY(-8px)} }
+
+    .hero-name {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(42px, 9vw, 80px);
+      font-weight: 700;
+      color: var(--deep);
+      letter-spacing: 8px;
+      line-height: 1;
+      margin-bottom: 14px;
+      opacity: 0;
+      animation: fadeUp .9s .8s forwards;
+    }
+    .hero-sub {
+      font-size: 15px;
+      color: var(--light);
+      letter-spacing: 4px;
+      font-weight: 300;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: fadeUp .8s 1s forwards;
+    }
+    .hero-date-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       background: rgba(255,255,255,.7);
-      backdrop-filter: blur(8px);
-      border: 1.5px solid rgba(192,132,252,.4);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--line);
       border-radius: 100px;
-      padding: 10px 28px;
-      font-size: 15px;
+      padding: 12px 32px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--warm);
+      box-shadow: 0 4px 20px rgba(139,111,94,.08);
+      opacity: 0;
+      animation: fadeUp .8s 1.2s forwards;
+    }
+    .hero-date-pill span { color: var(--rose); font-weight: 700; }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      opacity: .4;
+      animation: bobDown 2s ease-in-out infinite;
+    }
+    .scroll-cue-line {
+      width: 1px; height: 36px;
+      background: linear-gradient(180deg, transparent, var(--warm));
+    }
+    .scroll-cue-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--warm);
+    }
+    @keyframes bobDown {
+      0%,100%{transform:translateX(-50%) translateY(0)}
+      50%{transform:translateX(-50%) translateY(6px)}
+    }
+
+    /* ════════════════════════════════
+       SHARED SECTION STYLES
+    ════════════════════════════════ */
+    .sec-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 96px 24px;
+      text-align: center;
+    }
+
+    .sec-tag {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--rose);
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+    .sec-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(24px, 4vw, 38px);
       font-weight: 600;
       color: var(--deep);
-      opacity: 0;
-      animation: fadeUp .8s 1.4s forwards;
-      margin-top: 8px;
-    }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      opacity: .6;
-      animation: bounce 2s infinite;
-      font-size: 12px;
-      color: var(--deep);
-    }
-    .scroll-hint span { display: block; width: 20px; height: 20px; border-right: 2px solid var(--deep); border-bottom: 2px solid var(--deep); transform: rotate(45deg); }
-
-    /* ════════════════════════════════
-       SECTION 2 · MESSAGE
-    ════════════════════════════════ */
-    #message {
-      background: var(--white);
-      padding: 100px 24px;
-      text-align: center;
-    }
-
-    .section-tag {
-      display: inline-block;
-      font-size: 11px;
-      letter-spacing: 5px;
-      text-transform: uppercase;
-      color: #c084fc;
-      font-weight: 700;
       margin-bottom: 20px;
+      line-height: 1.4;
     }
-
-    .section-title {
-      font-size: clamp(26px, 5vw, 44px);
-      font-weight: 900;
-      color: var(--deep);
-      margin-bottom: 24px;
-      line-height: 1.3;
-    }
-
-    .divider {
-      width: 60px;
-      height: 3px;
-      background: linear-gradient(90deg, #c084fc, #f472b6);
-      border-radius: 99px;
-      margin: 0 auto 36px;
-    }
-
-    #message .msg-body {
-      max-width: 560px;
-      margin: 0 auto;
-      font-size: 16px;
-      line-height: 2;
-      color: #5a4040;
+    .sec-rule {
+      width: 40px; height: 1.5px;
+      background: var(--blush);
+      margin: 0 auto 40px;
+      border-radius: 2px;
     }
 
     /* ════════════════════════════════
-       SECTION 3 · GALLERY
+       MESSAGE
     ════════════════════════════════ */
-    #gallery {
-      background: linear-gradient(180deg, #fce4ec 0%, #f3e8ff 100%);
-      padding: 100px 24px;
-      text-align: center;
+    #message { background: #fff; }
+    .msg-text {
+      font-size: 15px;
+      line-height: 2.2;
+      color: var(--text);
+      font-weight: 300;
     }
+    .msg-sig {
+      margin-top: 32px;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 14px;
+      color: var(--warm);
+      letter-spacing: 3px;
+    }
+
+    /* ════════════════════════════════
+       GALLERY
+    ════════════════════════════════ */
+    #gallery { background: var(--ivory); }
 
     .gallery-grid {
-      max-width: 900px;
-      margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 12px;
+      max-width: 680px;
+      margin: 0 auto;
     }
-
-    .gallery-item {
-      border-radius: 20px;
-      overflow: hidden;
+    .g-item {
+      border-radius: 16px;
       aspect-ratio: 1;
-      background: rgba(255,255,255,.6);
-      backdrop-filter: blur(6px);
-      border: 1.5px solid rgba(255,255,255,.8);
-      box-shadow: 0 8px 32px rgba(192,132,252,.15);
-      cursor: pointer;
-      transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+      background: linear-gradient(135deg, #fdf0e8, #eaf5ef);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+      overflow: hidden;
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
+      transition: transform .35s cubic-bezier(.34,1.4,.64,1), box-shadow .35s;
+      box-shadow: 0 2px 12px rgba(139,111,94,.06);
     }
-    .gallery-item:hover {
-      transform: scale(1.06) rotate(-1deg);
-      box-shadow: 0 16px 48px rgba(192,132,252,.35);
+    .g-item:hover {
+      transform: scale(1.04);
+      box-shadow: 0 10px 32px rgba(139,111,94,.14);
     }
-    .gallery-item.large {
+    .g-item.feat {
       grid-column: span 2;
       grid-row: span 2;
-      font-size: 64px;
+      font-size: 56px;
+      border-radius: 20px;
     }
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .gallery-item .label {
+    .g-item img { width:100%; height:100%; object-fit:cover; display:block; }
+    .g-label {
       position: absolute;
-      bottom: 10px;
-      left: 50%;
+      bottom: 10px; left: 50%;
       transform: translateX(-50%);
       background: rgba(255,255,255,.85);
       border-radius: 20px;
       padding: 3px 14px;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--deep);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--warm);
       white-space: nowrap;
+      backdrop-filter: blur(4px);
     }
 
     /* ════════════════════════════════
-       SECTION 4 · TIMELINE
+       TIMELINE
     ════════════════════════════════ */
-    #timeline {
-      background: var(--white);
-      padding: 100px 24px;
-      text-align: center;
-    }
+    #timeline { background: #fff; }
 
-    .timeline-wrap {
-      max-width: 600px;
+    .tl-list {
+      max-width: 520px;
       margin: 0 auto;
       position: relative;
+      text-align: left;
     }
-    .timeline-wrap::before {
+    .tl-list::before {
       content: '';
       position: absolute;
-      left: 50%;
-      top: 0; bottom: 0;
-      width: 2px;
-      background: linear-gradient(180deg, #c084fc, #f472b6, #60a5fa);
-      transform: translateX(-50%);
+      left: 19px; top: 4px; bottom: 4px;
+      width: 1px;
+      background: linear-gradient(180deg, var(--blush), var(--mint));
     }
-
-    .tl-item {
+    .tl-row {
       display: flex;
-      align-items: center;
-      margin-bottom: 48px;
-      position: relative;
-      opacity: 0;
-      transform: translateY(30px);
+      gap: 24px;
+      margin-bottom: 36px;
+      align-items: flex-start;
+      opacity: 0; transform: translateX(-20px);
       transition: opacity .6s, transform .6s;
     }
-    .tl-item.visible { opacity: 1; transform: translateY(0); }
-    .tl-item:nth-child(odd)  { flex-direction: row; }
-    .tl-item:nth-child(even) { flex-direction: row-reverse; }
-
+    .tl-row.visible { opacity: 1; transform: translateX(0); }
     .tl-dot {
-      width: 44px;
-      height: 44px;
+      width: 40px; height: 40px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #c084fc, #f472b6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
+      background: var(--ivory);
+      border: 1.5px solid var(--blush);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
       flex-shrink: 0;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 0 0 6px rgba(192,132,252,.2);
-      z-index: 2;
+      box-shadow: 0 2px 10px rgba(232,160,144,.15);
     }
-    .tl-content {
-      width: calc(50% - 40px);
-      background: linear-gradient(135deg, #fdf4ff, #fce4ec);
-      border-radius: 16px;
-      padding: 18px 20px;
-      text-align: left;
-      border: 1px solid rgba(192,132,252,.2);
-      box-shadow: 0 4px 20px rgba(192,132,252,.1);
-    }
-    .tl-item:nth-child(even) .tl-content { text-align: right; }
-    .tl-content .tl-age {
-      font-size: 11px;
-      font-weight: 700;
-      color: #c084fc;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-    .tl-content h4 { font-size: 16px; font-weight: 800; color: var(--deep); margin-bottom: 4px; }
-    .tl-content p  { font-size: 13px; line-height: 1.6; color: #6b5563; }
-
-    /* ════════════════════════════════
-       SECTION 5 · DOLJABI (돌잡이)
-    ════════════════════════════════ */
-    #doljabi {
-      background: linear-gradient(160deg, #e0e7ff 0%, #fce4ec 100%);
-      padding: 100px 24px;
-      text-align: center;
-    }
-
-    .doljabi-grid {
-      max-width: 700px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-
-    .doljabi-item {
-      background: rgba(255,255,255,.8);
-      backdrop-filter: blur(8px);
-      border-radius: 20px;
-      padding: 28px 12px 20px;
-      border: 1.5px solid rgba(255,255,255,.9);
-      box-shadow: 0 8px 24px rgba(100,100,200,.1);
-      transition: transform .3s cubic-bezier(.34,1.56,.64,1);
-      cursor: default;
-    }
-    .doljabi-item:hover { transform: translateY(-8px) scale(1.04); }
-    .doljabi-item .icon { font-size: 40px; margin-bottom: 10px; }
-    .doljabi-item .name {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--deep);
-      margin-bottom: 4px;
-    }
-    .doljabi-item .meaning {
-      font-size: 11px;
-      color: #9370b8;
-      line-height: 1.4;
-    }
-
-    /* ════════════════════════════════
-       SECTION 6 · INVITATION INFO
-    ════════════════════════════════ */
-    #info {
-      background: var(--white);
-      padding: 100px 24px;
-      text-align: center;
-    }
-
-    .info-cards {
-      max-width: 700px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-
-    .info-card {
-      background: linear-gradient(135deg, #fdf4ff, #fce4ec);
-      border-radius: 20px;
-      padding: 32px 20px;
-      border: 1px solid rgba(192,132,252,.2);
-      box-shadow: 0 4px 20px rgba(192,132,252,.08);
-    }
-    .info-card .ic-icon { font-size: 36px; margin-bottom: 14px; }
-    .info-card .ic-label {
-      font-size: 11px;
+    .tl-body { padding-top: 6px; }
+    .tl-age {
+      font-size: 10px;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: #c084fc;
-      font-weight: 700;
-      margin-bottom: 8px;
+      color: var(--rose);
+      font-weight: 500;
+      margin-bottom: 4px;
     }
-    .info-card .ic-value {
+    .tl-body h4 {
+      font-family: 'Noto Serif KR', serif;
       font-size: 16px;
-      font-weight: 800;
-      color: var(--deep);
-      line-height: 1.5;
-    }
-    .info-card .ic-sub {
-      font-size: 13px;
-      color: #9370b8;
-      margin-top: 4px;
-    }
-
-    /* Map placeholder */
-    .map-placeholder {
-      max-width: 700px;
-      margin: 36px auto 0;
-      height: 240px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #e0e7ff, #fce4ec);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      color: var(--deep);
       font-weight: 600;
-      border: 2px dashed rgba(192,132,252,.4);
-      gap: 10px;
+      color: var(--deep);
+      margin-bottom: 4px;
     }
-
+    .tl-body p {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--light);
+      font-weight: 300;
+    }
 
     /* ════════════════════════════════
-       SECTION 8 · FOOTER
+       DOLJABI
+    ════════════════════════════════ */
+    #doljabi { background: var(--ivory); }
+
+    .dol-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .dol-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 22px 10px 18px;
+      text-align: center;
+      border: 1px solid var(--line);
+      transition: transform .3s cubic-bezier(.34,1.4,.64,1), box-shadow .3s;
+      box-shadow: 0 2px 12px rgba(139,111,94,.04);
+    }
+    .dol-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(139,111,94,.1);
+    }
+    .dol-card .di { font-size: 30px; margin-bottom: 10px; }
+    .dol-card .dn {
+      font-size: 12px; font-weight: 700;
+      color: var(--deep); margin-bottom: 3px;
+    }
+    .dol-card .dm {
+      font-size: 10px; color: var(--light);
+      line-height: 1.4; font-weight: 300;
+    }
+
+    /* ════════════════════════════════
+       INFO
+    ════════════════════════════════ */
+    #info { background: #fff; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+    .info-card {
+      background: var(--ivory);
+      border-radius: 18px;
+      padding: 28px 20px;
+      text-align: left;
+      border: 1px solid var(--line);
+    }
+    .info-card .ii { font-size: 24px; margin-bottom: 12px; }
+    .info-card .il {
+      font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--rose); font-weight: 600; margin-bottom: 6px;
+    }
+    .info-card .iv {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 15px; font-weight: 600;
+      color: var(--deep); line-height: 1.5; margin-bottom: 4px;
+    }
+    .info-card .is {
+      font-size: 12px; color: var(--light); font-weight: 300;
+    }
+
+    .map-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--deep);
+      color: #fff;
+      border-radius: 14px;
+      padding: 16px 36px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: transform .2s, box-shadow .2s, background .2s;
+      box-shadow: 0 6px 20px rgba(74,55,40,.2);
+    }
+    .map-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(74,55,40,.28);
+      background: var(--warm);
+    }
+
+    /* ════════════════════════════════
+       FOOTER
     ════════════════════════════════ */
     #footer {
-      background: #2d1b4e;
-      padding: 48px 24px;
+      background: var(--deep);
+      padding: 56px 24px;
       text-align: center;
-      color: rgba(255,255,255,.5);
+    }
+    .footer-flower { font-size: 20px; margin-bottom: 14px; opacity: .7; }
+    .footer-text {
       font-size: 13px;
+      color: rgba(255,255,255,.45);
       line-height: 2;
+      font-weight: 300;
     }
-    #footer .hearts {
-      font-size: 22px;
-      margin-bottom: 12px;
-      animation: pulse 2s infinite;
-    }
-
-    /* ════════════════════════════════
-       ANIMATIONS
-    ════════════════════════════════ */
-    @keyframes fadeDown  { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes fadeUp    { from { opacity:0; transform:translateY(20px);  } to { opacity:1; transform:translateY(0); } }
-    @keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
-    @keyframes scaleIn   { from { opacity:0; transform:scale(.6); } to { opacity:1; transform:scale(1); } }
-    @keyframes floatY    { 0%,100% { transform:translateY(0);    } 50% { transform:translateY(-16px); } }
-    @keyframes spin      { from { transform:rotate(0deg); }   to   { transform:rotate(360deg); } }
-    @keyframes bounce    { 0%,100% { transform:translateX(-50%) translateY(0); } 50% { transform:translateX(-50%) translateY(8px); } }
-    @keyframes pulse     { 0%,100% { transform:scale(1);   } 50% { transform:scale(1.15); } }
-    @keyframes confettiFall {
-      0%   { transform: translateY(-10px) rotate(0deg);   opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    .footer-name {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 15px;
+      color: rgba(255,255,255,.7);
+      margin-bottom: 8px;
+      letter-spacing: 4px;
     }
 
-    /* Scroll-reveal base */
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity .7s ease, transform .7s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    /* ── Keyframes ── */
+    @keyframes fadeUp  { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes scaleIn { from{opacity:0;transform:scale(.7)} to{opacity:1;transform:scale(1)} }
 
     /* ── Responsive ── */
-    @media (max-width: 600px) {
-      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-      .gallery-item.large { grid-column: span 2; grid-row: span 1; }
-      .doljabi-grid { grid-template-columns: repeat(2, 1fr); }
-      .timeline-wrap::before { left: 20px; }
-      .tl-item { flex-direction: column !important; padding-left: 56px; }
-      .tl-dot  { left: 20px; transform: none; }
-      .tl-content { width: 100%; text-align: left !important; }
+    @media(max-width:560px){
+      .gallery-grid { grid-template-columns: repeat(2,1fr); }
+      .g-item.feat  { grid-column:span 2; grid-row:span 1; }
+      .dol-grid     { grid-template-columns: repeat(2,1fr); }
+      .info-grid    { grid-template-columns: 1fr; }
+      .tl-list::before { left: 17px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ── Particle canvas ── -->
-<canvas id="particles"></canvas>
+<!-- floating petals -->
+<div class="petal-layer" id="petalLayer"></div>
 
-<!-- ══════════════════════════════════════
-     SECTION 1 · HERO
-══════════════════════════════════════ -->
+<!-- ══════════ HERO ══════════ -->
 <section id="hero">
-  <p class="ribbon">✦ First Birthday ✦</p>
+  <p class="hero-eyebrow">First Birthday</p>
 
-  <h1 class="baby-name">김 아 기</h1>
-  <!-- ★ 아기 이름 교체: .baby-name 내용 변경 -->
+  <div class="hero-photo-wrap">
+    <div class="hero-photo-ring">
+      <div class="hero-photo-inner">
+        <!-- ★ 사진 교체: <img src="photos/hero.jpg" alt="채윤"> -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="80%" height="80%">
+          <defs>
+            <radialGradient id="bodyGrad" cx="40%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#93d0f0" stop-opacity=".6"/>
+              <stop offset="100%" stop-color="#3a8abf" stop-opacity=".2"/>
+            </radialGradient>
+            <radialGradient id="headGrad" cx="38%" cy="30%" r="65%">
+              <stop offset="0%" stop-color="#b0dff5"/>
+              <stop offset="100%" stop-color="#4a9fd4"/>
+            </radialGradient>
+          </defs>
 
-  <p class="dol-text">돌잔치에 초대합니다</p>
+          <!-- shadow -->
+          <ellipse cx="100" cy="210" rx="46" ry="8" fill="#a0c4d8" opacity=".3"/>
 
-  <!-- ★ 메인 사진 교체: img src 변경 또는 .img-placeholder 삭제 후 img 태그 추가 -->
-  <div class="hero-img-wrap">
-    <div class="img-placeholder">👶</div>
-    <!-- <img src="photos/hero.jpg" alt="아기 사진" /> -->
+          <!-- body coil base -->
+          <ellipse cx="100" cy="174" rx="52" ry="32" fill="#5ab0e0"/>
+          <ellipse cx="100" cy="174" rx="52" ry="32" fill="url(#bodyGrad)"/>
+          <!-- coil inner -->
+          <ellipse cx="100" cy="174" rx="30" ry="15" fill="#3a8abf"/>
+          <ellipse cx="100" cy="172" rx="20" ry="9" fill="#fff" opacity=".15"/>
+
+          <!-- belly scales hint -->
+          <ellipse cx="100" cy="178" rx="18" ry="9" fill="#d0eef8" opacity=".5"/>
+
+          <!-- tail curl -->
+          <path d="M150 170 Q172 158 165 142 Q160 130 150 138 Q144 143 148 154" fill="#5ab0e0"/>
+          <path d="M150 170 Q172 158 165 142 Q160 130 150 138 Q144 143 148 154" fill="#93d0f0" opacity=".45"/>
+
+          <!-- neck -->
+          <ellipse cx="100" cy="142" rx="22" ry="24" fill="#5ab0e0"/>
+          <ellipse cx="100" cy="148" rx="13" ry="10" fill="#d0eef8" opacity=".4"/>
+
+          <!-- HEAD -->
+          <circle cx="100" cy="100" r="44" fill="url(#headGrad)"/>
+          <!-- head highlight -->
+          <ellipse cx="88" cy="80" rx="20" ry="13" fill="#d8f0fc" opacity=".55"/>
+
+          <!-- cute little horn nub -->
+          <ellipse cx="100" cy="60" rx="10" ry="8" fill="#4a9fd4"/>
+          <circle cx="100" cy="55" r="6" fill="#93d0f0" opacity=".7"/>
+
+          <!-- scale dot pattern on head -->
+          <circle cx="78" cy="90" r="3" fill="#3a8abf" opacity=".2"/>
+          <circle cx="122" cy="90" r="3" fill="#3a8abf" opacity=".2"/>
+          <circle cx="100" cy="86" r="3" fill="#3a8abf" opacity=".2"/>
+
+          <!-- EYE LEFT white -->
+          <circle cx="81" cy="98" r="15" fill="white"/>
+          <!-- EYE LEFT iris (청사 — 파란 눈) -->
+          <circle cx="83" cy="100" r="10" fill="#1a6abf"/>
+          <circle cx="83" cy="100" r="6"  fill="#0a3a80"/>
+          <circle cx="86" cy="97"  r="3"  fill="#4a9fff" opacity=".7"/>
+          <circle cx="88" cy="95"  r="2"  fill="white"/>
+          <circle cx="82" cy="104" r="1"  fill="white" opacity=".5"/>
+
+          <!-- EYE RIGHT white -->
+          <circle cx="119" cy="98" r="15" fill="white"/>
+          <!-- EYE RIGHT iris -->
+          <circle cx="117" cy="100" r="10" fill="#1a6abf"/>
+          <circle cx="117" cy="100" r="6"  fill="#0a3a80"/>
+          <circle cx="114" cy="97"  r="3"  fill="#4a9fff" opacity=".7"/>
+          <circle cx="112" cy="95"  r="2"  fill="white"/>
+          <circle cx="118" cy="104" r="1"  fill="white" opacity=".5"/>
+
+          <!-- blush LEFT -->
+          <ellipse cx="70" cy="112" rx="9" ry="5.5" fill="#f9b8c8" opacity=".6"/>
+          <!-- blush RIGHT -->
+          <ellipse cx="130" cy="112" rx="9" ry="5.5" fill="#f9b8c8" opacity=".6"/>
+
+          <!-- NOSE -->
+          <ellipse cx="100" cy="116" rx="6" ry="4" fill="#3a8abf"/>
+          <circle cx="97" cy="115" r="2" fill="#1a4a7a" opacity=".45"/>
+          <circle cx="103" cy="115" r="2" fill="#1a4a7a" opacity=".45"/>
+
+          <!-- MOUTH -->
+          <path d="M90 124 Q100 133 110 124" fill="none" stroke="#2a6a9a" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- TONGUE -->
+          <path d="M100 132 L100 140" stroke="#f06080" stroke-width="3" stroke-linecap="round"/>
+          <path d="M100 140 L94 146 M100 140 L106 146" stroke="#f06080" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- RIBBON BOW — 연분홍 리본 -->
+          <path d="M80 64 Q90 54 100 61 Q90 69 80 64Z" fill="#fcd0e0"/>
+          <path d="M120 64 Q110 54 100 61 Q110 69 120 64Z" fill="#fcd0e0"/>
+          <circle cx="100" cy="61" r="5.5" fill="#f472b6" opacity=".85"/>
+          <!-- ribbon shine -->
+          <ellipse cx="98" cy="59" rx="2" ry="1.5" fill="white" opacity=".5"/>
+
+          <!-- sparkles & stars -->
+          <text x="28"  y="76"  font-size="14" fill="#fde68a" opacity=".9">✦</text>
+          <text x="156" y="86"  font-size="11" fill="#fcd0e0" opacity=".85">✦</text>
+          <text x="150" y="128" font-size="9"  fill="#93d0f0" opacity=".8">✿</text>
+          <text x="32"  y="132" font-size="9"  fill="#fde68a" opacity=".75">✿</text>
+          <text x="60"  y="58"  font-size="8"  fill="#fcd0e0" opacity=".7">·</text>
+          <text x="138" y="62"  font-size="8"  fill="#93d0f0" opacity=".7">·</text>
+        </svg>
+      </div>
+    </div>
+    <div class="deco deco-a"></div>
+    <div class="deco deco-b"></div>
+    <div class="deco deco-c"></div>
   </div>
 
-  <div class="date-badge">
-    📅 2025년 OO월 OO일 · 오후 OO시
-    <!-- ★ 날짜/시간 교체 -->
+  <h1 class="hero-name">김채윤</h1>
+  <p class="hero-sub">돌잔치에 초대합니다</p>
+
+  <div class="hero-date-pill">
+    🌸 <span>2026년 6월 13일</span> 토요일 &nbsp;·&nbsp; 오후 12시
   </div>
 
-  <div class="scroll-hint">
-    <span></span>
-    scroll
+  <div class="scroll-cue">
+    <div class="scroll-cue-line"></div>
+    <div class="scroll-cue-dot"></div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════
-     SECTION 2 · MESSAGE (초대 메시지)
-══════════════════════════════════════ -->
+<!-- ══════════ MESSAGE ══════════ -->
 <section id="message">
-  <span class="section-tag reveal">— Invitation —</span>
-  <h2 class="section-title reveal">소중한 분들을 초대합니다</h2>
-  <div class="divider reveal"></div>
-
-  <!-- ★ 초대 문구 교체 -->
-  <p class="msg-body reveal">
-    세상에 태어난 지 벌써 일 년이 지났습니다.<br>
-    작은 손발로 세상을 탐험하며<br>
-    매 순간 기쁨을 나눠준 우리 아이가<br>
-    첫 번째 생일을 맞이합니다.<br><br>
-    바쁜 일상에도 자리를 함께해 주신다면<br>
-    더없이 행복한 하루가 될 것 같습니다.<br><br>
-    <strong>— 부모 이름 —</strong>
-    <!-- ★ 부모 이름 교체 -->
-  </p>
+  <div class="sec-inner">
+    <p class="sec-tag reveal">— Invitation —</p>
+    <h2 class="sec-title reveal">소중한 분들을 초대합니다</h2>
+    <div class="sec-rule reveal"></div>
+    <p class="msg-text reveal reveal-slow">
+      세상에 태어난 지 벌써 일 년이 지났습니다.<br>
+      작은 손발로 세상을 탐험하며<br>
+      매 순간 기쁨을 나눠준 우리 채윤이가<br>
+      첫 번째 생일을 맞이합니다.<br><br>
+      바쁜 일상에도 자리를 함께해 주신다면<br>
+      더없이 행복한 하루가 될 것 같습니다.
+    </p>
+    <p class="msg-sig reveal">— 김덕수 · 윤다슬 —</p>
+  </div>
 </section>
 
-<!-- ══════════════════════════════════════
-     SECTION 3 · GALLERY (사진 갤러리)
-══════════════════════════════════════ -->
+<!-- ══════════ GALLERY ══════════ -->
 <section id="gallery">
-  <span class="section-tag reveal">— Gallery —</span>
-  <h2 class="section-title reveal">지난 1년의 순간들</h2>
-  <div class="divider reveal"></div>
+  <div class="sec-inner">
+    <p class="sec-tag reveal">— Gallery —</p>
+    <h2 class="sec-title reveal">지난 1년의 순간들</h2>
+    <div class="sec-rule reveal"></div>
 
-  <!-- ★ 사진 교체: img-placeholder 삭제 후 img 태그 삽입 -->
-  <div class="gallery-grid reveal">
-    <div class="gallery-item large">
-      <div style="font-size:72px">📸</div>
-      <span class="label">대표 사진</span>
-      <!-- <img src="photos/gallery1.jpg" alt=""> -->
-    </div>
-    <div class="gallery-item">
-      <div style="font-size:42px">🌱</div>
-      <span class="label">1개월</span>
-    </div>
-    <div class="gallery-item">
-      <div style="font-size:42px">🐣</div>
-      <span class="label">3개월</span>
-    </div>
-    <div class="gallery-item">
-      <div style="font-size:42px">🌸</div>
-      <span class="label">6개월</span>
-    </div>
-    <div class="gallery-item">
-      <div style="font-size:42px">🌞</div>
-      <span class="label">9개월</span>
-    </div>
-    <div class="gallery-item">
-      <div style="font-size:42px">🎂</div>
-      <span class="label">12개월</span>
+    <div class="gallery-grid reveal reveal-slow">
+      <!-- ★ 사진 교체: img 태그 삽입 -->
+      <div class="g-item feat">🌿<span class="g-label">대표 사진</span></div>
+      <div class="g-item">🌱<span class="g-label">1개월</span></div>
+      <div class="g-item">🌼<span class="g-label">3개월</span></div>
+      <div class="g-item">🌸<span class="g-label">6개월</span></div>
+      <div class="g-item">☀️<span class="g-label">9개월</span></div>
+      <div class="g-item">🎂<span class="g-label">12개월</span></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════
-     SECTION 4 · TIMELINE (성장 일기)
-══════════════════════════════════════ -->
+<!-- ══════════ TIMELINE ══════════ -->
 <section id="timeline">
-  <span class="section-tag reveal">— Growth Story —</span>
-  <h2 class="section-title reveal">아기의 성장 이야기</h2>
-  <div class="divider reveal"></div>
+  <div class="sec-inner">
+    <p class="sec-tag reveal">— Growth Story —</p>
+    <h2 class="sec-title reveal">채윤이의 성장 이야기</h2>
+    <div class="sec-rule reveal"></div>
 
-  <div class="timeline-wrap">
-
-    <!-- ★ 각 이정표 내용 교체 -->
-    <div class="tl-item">
-      <div class="tl-dot">🌱</div>
-      <div class="tl-content">
-        <div class="tl-age">Day 1</div>
-        <h4>세상에 태어나다</h4>
-        <p>OOkg의 건강한 모습으로 처음 세상과 만났습니다.</p>
+    <div class="tl-list">
+      <div class="tl-row">
+        <div class="tl-dot">🌱</div>
+        <div class="tl-body">
+          <div class="tl-age">Day 1</div>
+          <h4>세상에 태어나다</h4>
+          <p>건강한 모습으로 처음 세상과 만났습니다.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-dot">😊</div>
+        <div class="tl-body">
+          <div class="tl-age">2개월</div>
+          <h4>첫 미소</h4>
+          <p>엄마 아빠를 보고 방긋 웃어준 순간.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-dot">🗣️</div>
+        <div class="tl-body">
+          <div class="tl-age">4개월</div>
+          <h4>옹알이 시작</h4>
+          <p>아기만의 언어로 세상과 대화하기 시작했어요.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-dot">🙌</div>
+        <div class="tl-body">
+          <div class="tl-age">7개월</div>
+          <h4>혼자 앉기</h4>
+          <p>스스로 균형을 잡고 앉는 모습이 대견했어요.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-dot">👣</div>
+        <div class="tl-body">
+          <div class="tl-age">10개월</div>
+          <h4>첫 걸음마</h4>
+          <p>아장아장 걷던 첫 발걸음, 온 가족이 환호했습니다.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-dot">🎂</div>
+        <div class="tl-body">
+          <div class="tl-age">12개월</div>
+          <h4>첫 번째 생일 🎉</h4>
+          <p>벌써 일 년! 앞으로도 건강하고 행복하게 자라렴.</p>
+        </div>
       </div>
     </div>
-
-    <div class="tl-item">
-      <div class="tl-dot">😊</div>
-      <div class="tl-content">
-        <div class="tl-age">2개월</div>
-        <h4>첫 미소</h4>
-        <p>엄마 아빠를 보고 방긋 웃어주던 그 순간.</p>
-      </div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-dot">🗣️</div>
-      <div class="tl-content">
-        <div class="tl-age">4개월</div>
-        <h4>옹알이 시작</h4>
-        <p>아기만의 언어로 세상과 대화하기 시작했어요.</p>
-      </div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-dot">🙌</div>
-      <div class="tl-content">
-        <div class="tl-age">7개월</div>
-        <h4>혼자 앉기</h4>
-        <p>스스로 균형을 잡고 앉는 모습이 너무 대견했어요.</p>
-      </div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-dot">👣</div>
-      <div class="tl-content">
-        <div class="tl-age">10개월</div>
-        <h4>첫 걸음마</h4>
-        <p>아장아장 걷던 첫 발걸음, 온 가족이 환호했습니다.</p>
-      </div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-dot">🎂</div>
-      <div class="tl-content">
-        <div class="tl-age">12개월</div>
-        <h4>첫 번째 생일 🎉</h4>
-        <p>벌써 일 년! 앞으로도 건강하고 행복하게 자라렴.</p>
-      </div>
-    </div>
-
   </div>
 </section>
 
-<!-- ══════════════════════════════════════
-     SECTION 5 · DOLJABI (돌잡이)
-══════════════════════════════════════ -->
+<!-- ══════════ DOLJABI ══════════ -->
 <section id="doljabi">
-  <span class="section-tag reveal">— Doljabi —</span>
-  <h2 class="section-title reveal">돌잡이</h2>
-  <div class="divider reveal"></div>
-  <p class="msg-body reveal" style="margin-bottom:40px;">
-    우리 아이가 무엇을 잡을까요?<br>어떤 미래가 기다리고 있을지 기대해 주세요!
-  </p>
+  <div class="sec-inner">
+    <p class="sec-tag reveal">— 돌잡이 —</p>
+    <h2 class="sec-title reveal">무엇을 잡을까요?</h2>
+    <div class="sec-rule reveal"></div>
+    <p class="msg-text reveal" style="margin-bottom:36px; font-size:14px;">채윤이의 미래가 기대됩니다 🌿</p>
 
-  <div class="doljabi-grid reveal">
-    <div class="doljabi-item">
-      <div class="icon">🖊️</div>
-      <div class="name">실 / 붓</div>
-      <div class="meaning">장수·문학</div>
-    </div>
-    <div class="doljabi-item">
-      <div class="icon">💰</div>
-      <div class="name">돈</div>
-      <div class="meaning">부귀·재물</div>
-    </div>
-    <div class="doljabi-item">
-      <div class="icon">⚖️</div>
-      <div class="name">판사봉</div>
-      <div class="meaning">법조·정의</div>
-    </div>
-    <div class="doljabi-item">
-      <div class="icon">🎵</div>
-      <div class="name">마이크</div>
-      <div class="meaning">예술·음악</div>
-    </div>
-    <div class="doljabi-item">
-      <div class="icon">⚽</div>
-      <div class="name">공</div>
-      <div class="meaning">스포츠·건강</div>
-    </div>
-    <div class="doljabi-item">
-      <div class="icon">💻</div>
-      <div class="name">마우스</div>
-      <div class="meaning">IT·미래</div>
-    </div>
-    <div class="doljabi-item">
-      <div class="icon">📚</div>
-      <div class="name">책</div>
-      <div class="meaning">학문·지혜</div>
-    </div>
-    <div class="doljabi-item">
-      <div class="icon">🌍</div>
-      <div class="name">지구본</div>
-      <div class="meaning">세계·외교</div>
+    <div class="dol-grid reveal reveal-slow">
+      <div class="dol-card"><div class="di">🖊️</div><div class="dn">붓 · 실</div><div class="dm">장수 · 문학</div></div>
+      <div class="dol-card"><div class="di">💰</div><div class="dn">돈</div><div class="dm">부귀 · 재물</div></div>
+      <div class="dol-card"><div class="di">⚖️</div><div class="dn">판사봉</div><div class="dm">법조 · 정의</div></div>
+      <div class="dol-card"><div class="di">🎵</div><div class="dn">마이크</div><div class="dm">예술 · 음악</div></div>
+      <div class="dol-card"><div class="di">⚽</div><div class="dn">공</div><div class="dm">스포츠 · 건강</div></div>
+      <div class="dol-card"><div class="di">💻</div><div class="dn">마우스</div><div class="dm">IT · 미래</div></div>
+      <div class="dol-card"><div class="di">📚</div><div class="dn">책</div><div class="dm">학문 · 지혜</div></div>
+      <div class="dol-card"><div class="di">🌍</div><div class="dn">지구본</div><div class="dm">세계 · 외교</div></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════
-     SECTION 6 · INFO (행사 정보)
-══════════════════════════════════════ -->
+<!-- ══════════ INFO ══════════ -->
 <section id="info">
-  <span class="section-tag reveal">— Event Info —</span>
-  <h2 class="section-title reveal">행사 안내</h2>
-  <div class="divider reveal"></div>
+  <div class="sec-inner">
+    <p class="sec-tag reveal">— Event Info —</p>
+    <h2 class="sec-title reveal">행사 안내</h2>
+    <div class="sec-rule reveal"></div>
 
-  <div class="info-cards reveal">
-    <!-- ★ 날짜/시간/장소 정보 교체 -->
-    <div class="info-card">
-      <div class="ic-icon">📅</div>
-      <div class="ic-label">Date</div>
-      <div class="ic-value">2025년 OO월 OO일<br>토요일</div>
-      <div class="ic-sub">오후 OO시 ~ OO시</div>
+    <div class="info-grid reveal">
+      <div class="info-card">
+        <div class="ii">📅</div>
+        <div class="il">Date</div>
+        <div class="iv">2026년 6월 13일<br>토요일</div>
+        <div class="is">오후 12시</div>
+      </div>
+      <div class="info-card">
+        <div class="ii">📍</div>
+        <div class="il">Venue</div>
+        <div class="iv">구로 롯데시티호텔</div>
+        <div class="is">서울시 구로구 디지털로 306</div>
+      </div>
+      <div class="info-card">
+        <div class="ii">🚗</div>
+        <div class="il">Parking</div>
+        <div class="iv">호텔 주차장</div>
+        <div class="is">행사 당일 무료 주차</div>
+      </div>
+      <div class="info-card">
+        <div class="ii">📞</div>
+        <div class="il">Contact</div>
+        <div class="iv">김덕수 · 윤다슬</div>
+        <div class="is">문의는 문자로</div>
+      </div>
     </div>
-    <div class="info-card">
-      <div class="ic-icon">📍</div>
-      <div class="ic-label">Venue</div>
-      <div class="ic-value">OO웨딩홀<br>OO홀</div>
-      <div class="ic-sub">서울시 OO구 OO로 OOO</div>
-    </div>
-    <div class="info-card">
-      <div class="ic-icon">🚗</div>
-      <div class="ic-label">Parking</div>
-      <div class="ic-value">무료 주차<br>OO대 가능</div>
-      <div class="ic-sub">건물 지하 1~3층</div>
-    </div>
-    <div class="info-card">
-      <div class="ic-icon">📞</div>
-      <div class="ic-label">Contact</div>
-      <div class="ic-value">010-OOOO-OOOO</div>
-      <div class="ic-sub">문의는 문자로</div>
-    </div>
-  </div>
 
-  <!-- ★ 지도 iframe 교체: 아래 div를 카카오/네이버 지도 embed로 교체 -->
-  <div class="map-placeholder reveal">
-    🗺️ 지도 삽입 영역 (카카오맵 / 네이버지도 embed)
+    <!-- 카카오맵 embed (API 키 불필요) -->
+    <div class="reveal reveal-delay1" style="max-width:560px; margin:0 auto 24px;">
+      <div style="border-radius:20px; overflow:hidden; box-shadow:0 4px 24px rgba(139,111,94,.12); border:1px solid var(--line);">
+        <iframe
+          src="https://maps.google.com/maps?q=롯데시티호텔+구로&output=embed&hl=ko&z=16"
+          width="100%" height="300"
+          style="border:0; display:block;"
+          allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay2">
+      <a class="map-btn" href="https://naver.me/58NBVZRo" target="_blank">
+        🗺️ &nbsp;네이버지도에서 보기
+      </a>
+    </div>
   </div>
 </section>
 
-
-<!-- ══════════════════════════════════════
-     SECTION 8 · FOOTER
-══════════════════════════════════════ -->
+<!-- ══════════ FOOTER ══════════ -->
 <footer id="footer">
-  <div class="hearts">🎀 💜 🎀</div>
-  <p>우리 아이의 첫 번째 생일을 함께해 주셔서 감사합니다.</p>
-  <p style="margin-top:8px; font-size:12px; opacity:.4;">Made with ❤️ for our little one</p>
+  <div class="footer-flower">🌸 🌿 🌸</div>
+  <p class="footer-name">김채윤</p>
+  <p class="footer-text">
+    우리 아이의 첫 번째 생일을 함께해 주셔서 감사합니다.<br>
+    2026. 06. 13
+  </p>
 </footer>
 
-<!-- ══════════════════════════════════════
-     SCRIPTS
-══════════════════════════════════════ -->
 <script>
-/* ── 1. Particle System ── */
-(function () {
-  const canvas = document.getElementById('particles');
-  const ctx    = canvas.getContext('2d');
-
-  const SHAPES  = ['✦','★','♡','🌸','✿','·','◦'];
-  const COLORS  = ['#c084fc','#f472b6','#60a5fa','#fbbf24','#f9a8d4','#a78bfa'];
-  let   particles = [];
-  let   W, H;
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function rand(min, max) { return Math.random() * (max - min) + min; }
-
-  function spawn() {
-    particles.push({
-      x:     rand(0, W),
-      y:     rand(-20, H),
-      vy:    rand(.3, 1.2),
-      vx:    rand(-.4, .4),
-      size:  rand(10, 22),
-      alpha: rand(.3, .8),
-      shape: SHAPES[Math.floor(rand(0, SHAPES.length))],
-      color: COLORS[Math.floor(rand(0, COLORS.length))],
-      rot:   rand(0, 360),
-      drot:  rand(-1, 1),
-    });
-  }
-  for (let i = 0; i < 60; i++) spawn();
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    particles.forEach((p, i) => {
-      p.y   += p.vy;
-      p.x   += p.vx;
-      p.rot += p.drot;
-      if (p.y > H + 30) { particles.splice(i, 1); spawn(); }
-
-      ctx.save();
-      ctx.globalAlpha = p.alpha;
-      ctx.font = `${p.size}px serif`;
-      ctx.fillStyle = p.color;
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot * Math.PI / 180);
-      ctx.fillText(p.shape, 0, 0);
-      ctx.restore();
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
-
-/* ── 2. Scroll Reveal ── */
-(function () {
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        io.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.15 });
-
-  document.querySelectorAll('.reveal, .tl-item').forEach(el => io.observe(el));
-})();
-
-/* ── 3. Confetti Burst on Load ── */
-(function () {
-  const COLORS = ['#c084fc','#f472b6','#60a5fa','#fbbf24','#34d399','#f9a8d4'];
-  function burst() {
-    for (let i = 0; i < 80; i++) {
-      const el = document.createElement('div');
-      el.style.cssText = `
-        position:fixed; top:${Math.random()*40}%; left:${Math.random()*100}%;
-        width:${6+Math.random()*8}px; height:${6+Math.random()*8}px;
-        background:${COLORS[Math.floor(Math.random()*COLORS.length)]};
-        border-radius:${Math.random()>.5?'50%':'2px'};
-        pointer-events:none; z-index:9999;
-        animation:confettiFall ${1.5+Math.random()*2}s ease-in forwards;
-        animation-delay:${Math.random()*1}s;
-      `;
-      document.body.appendChild(el);
-      el.addEventListener('animationend', () => el.remove());
+/* ── Petal generator ── */
+(function(){
+  const layer = document.getElementById('petalLayer');
+  const items = ['🌸','🌼','🍀','✿','·','﹡','꽃'];
+  const colors = ['#f2c4b0','#c8ddd0','#e8d0c8','#d4e8d4','#f5e0d8'];
+  for(let i = 0; i < 28; i++){
+    const el = document.createElement('div');
+    el.className = 'petal';
+    const useEmoji = Math.random() > .4;
+    if(useEmoji){
+      el.textContent = items[Math.floor(Math.random()*items.length)];
+      el.style.fontSize = (10 + Math.random()*10) + 'px';
+    } else {
+      el.style.width  = (4 + Math.random()*6)+'px';
+      el.style.height = (4 + Math.random()*6)+'px';
+      el.style.borderRadius = '50%';
+      el.style.background = colors[Math.floor(Math.random()*colors.length)];
     }
+    el.style.left = (Math.random()*100)+'%';
+    el.style.animationDuration  = (8 + Math.random()*12)+'s';
+    el.style.animationDelay     = (Math.random()*12)+'s';
+    el.style.opacity = 0;
+    layer.appendChild(el);
   }
-  window.addEventListener('load', burst);
 })();
 
+/* ── Scroll reveal ── */
+(function(){
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal, .tl-row').forEach(el=>io.observe(el));
+})();
 </script>
-
 </body>
 </html>
